@@ -2035,11 +2035,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "SinglePost",
   data: function data() {
     return {
-      post: {}
+      post: {},
+      formData: {
+        name: "",
+        content: "",
+        post_id: null
+      },
+      formErrors: {},
+      commentSent: "false"
     };
   },
   created: function created() {
@@ -2047,11 +2072,24 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get("/api/posts/".concat(this.$route.params.slug)).then(function (response) {
       _this.post = response.data;
+      _this.formData.post_id = _this.post_id;
+      console.log(_this.post);
     })["catch"](function (error) {
       _this.$router.push({
         name: 'page-404'
       });
     });
+  },
+  methods: {
+    addComment: function addComment() {
+      var _this2 = this;
+
+      axios.get('api/comments/', this.formData).then(function (response) {
+        _this2.formData.name = "";
+        _this2.formData.content = "";
+      })["catch"](function (error) {// this.formError = error.response.data.errors;
+      });
+    }
   }
 });
 
@@ -3526,6 +3564,122 @@ var render = function () {
         _vm._l(_vm.post.tags, function (tag) {
           return _c("p", { key: tag.id }, [_vm._v(_vm._s(tag.name))])
         }),
+        _vm._v(" "),
+        _c("div", { staticClass: "commento" }, [
+          _c(
+            "form",
+            {
+              on: {
+                submit: function ($event) {
+                  $event.preventDefault()
+                  return _vm.addComment()
+                },
+              },
+            },
+            [
+              _c("h1", [_vm._v("Aggiungi un commento!")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.formData.name,
+                    expression: "formData.name",
+                  },
+                ],
+                attrs: {
+                  type: "text",
+                  id: "name",
+                  name: "",
+                  placeholder: "Inserisci utente",
+                },
+                domProps: { value: _vm.formData.name },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.formData, "name", $event.target.value)
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.formData.content,
+                    expression: "formData.content",
+                  },
+                ],
+                attrs: {
+                  name: "",
+                  id: "content",
+                  cols: "30",
+                  rows: "10",
+                  placeholder: "Inserisci commento",
+                },
+                domProps: { value: _vm.formData.content },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.formData, "content", $event.target.value)
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _vm.formErrors.content
+                ? _c(
+                    "div",
+                    { staticStyle: { backgound: "red", color: "white" } },
+                    [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.formErrors.content, function (error, index) {
+                          return _c("li", { key: index }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(error) +
+                                "\n                    "
+                            ),
+                          ])
+                        }),
+                        0
+                      ),
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("button", { attrs: { type: "submit" } }, [
+                _vm._v("Aggiungi un commento"),
+              ]),
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.commentSent,
+                  expression: "commentSent",
+                },
+              ],
+              staticStyle: { backgound: "green", color: "white" },
+            },
+            [
+              _vm._v(
+                "\n                Commento in fase di approvazione\n            "
+              ),
+            ]
+          ),
+        ]),
       ],
       2
     ),

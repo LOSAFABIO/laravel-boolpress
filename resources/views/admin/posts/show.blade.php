@@ -11,7 +11,39 @@
     <a href="{{route("admin.posts.index")}}">
       <button type="button" class="btn btn-primary my-1">Torna ai post</button>
     </a>
-    <form action="{{route("admin.posts.destroy", $post->id)}}" method="POST">
+    @if(count($post->comment) > 0 )
+      <div class="mt-3" id="comments">
+          <h3>Commenti</h3>
+          <table class="table">
+              <tbody>
+                  @foreach($post->comment as $comment)
+                  <tr>
+                      <td>{{$comment->content}}</td>
+                      <td>
+                          @if(!$comment->approved)
+                          <form action="{{route('admin.comments.update',$comment->id)}}" method="POST">
+                              @csrf
+                              @method("PATCH")
+                              <button type="submit" class="btn btn-success">Approva</button>
+                          </form>
+                          @else
+                              Approvato
+                          @endif
+                      </td>
+                      <td>
+                          <form action="{{route("admin.comments.destroy", $comment->id)}}" method="POST">
+                              @csrf
+                              @method("DELETE")
+                              <button type="submit" class="btn btn-danger">Elimina</button>
+                          </form>
+                      </td>
+                  </tr>
+                  @endforeach
+              </tbody>
+          </table>
+      </div>
+    @endif
+      <form action="{{route("admin.posts.destroy", $post->id)}}" method="POST">
       @csrf
       @method("DELETE")
       <button onclick="return confirm('Sicuro di voler cancellare questo post?');" type="submit" class="btn btn-danger my-1">Cancella</button>

@@ -17,6 +17,24 @@
             <h3>Tags</h3>
             <p v-for="tag in post.tags" :key="tag.id">{{tag.name}}</p>
             <!-- <router-link :to="{ name: 'single-post', params: {slug: 'aggiunto nuovo' }}">Visualizza IL Post</router-link> -->
+            <div class="commento">
+                <form @submit.prevent="addComment()">
+                    <h1>Aggiungi un commento!</h1>
+                    <input type="text" id="name" name="" placeholder="Inserisci utente" v-model="formData.name">
+                    <textarea name="" id="content" cols="30" rows="10" placeholder="Inserisci commento" v-model="formData.content"></textarea>
+                    <div v-if="formErrors.content" style="backgound:red; color:white;" >
+                        <ul>
+                            <li v-for="(error, index) in formErrors.content" :key="index">
+                                {{error}}
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="submit">Aggiungi un commento</button>
+                </form>
+                <div v-show="commentSent" style="backgound:green; color:white;" >
+                    Commento in fase di approvazione
+                </div>    
+            </div>
         </div>
     </div>
 </template>
@@ -27,17 +45,39 @@ export default ({
     name : "SinglePost",
     data(){
         return{
-            post:{} 
+            post:{},
+            formData:{
+                name : "",
+                content : "",
+                post_id: null
+            },
+            formErrors: {},
+            commentSent: "false" 
         }
     },
     created(){
         axios
         .get(`/api/posts/${this.$route.params.slug}`)
-        .then( response =>{
+        .then( (response) =>{
             this.post = response.data;
+            this.formData.post_id = this.post_id;
+            console.log(this.post);
         }).catch( error => {
             this.$router.push({name: 'page-404'});
         })
+    },
+    methods:{
+        addComment(){
+            axios
+            .post(`/api/comments/`, this.formData)
+            .then( (response) => {
+            this.formData.name = "";
+            this.formData.content = "";
+            })
+            .catch( error =>{
+                this.formError = error.response.data.errors;
+            })
+        }
     }
 })
 </script>

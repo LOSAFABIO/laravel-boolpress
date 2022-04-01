@@ -10,6 +10,8 @@ use App\Tag;
 
 use App\Category;
 
+use App\Comment;
+
 use App\Post;   
 
 use Illuminate\Http\Request;
