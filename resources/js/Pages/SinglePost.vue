@@ -60,7 +60,7 @@ export default ({
         .get(`/api/posts/${this.$route.params.slug}`)
         .then( (response) =>{
             this.post = response.data;
-            this.formData.post_id = this.post_id;
+            this.formData.post_id = this.post.id;
             console.log(this.post);
         }).catch( error => {
             this.$router.push({name: 'page-404'});

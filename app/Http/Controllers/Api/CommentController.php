@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
@@ -13,10 +15,10 @@ class CommentController extends Controller
     public function store(Request $request){
         $data = $request->all();
         $validator = Validator::make($data, [
-            'name' => 'nullable'|'string'| 'max:50',
-            'content' => 'string'| 'required',
-            'post_id' => 'exists:post,id'
-        ]);
+            'name' => 'nullable|string|max:50',
+            'content' => 'string|required',
+            'post_id' => 'exists:posts,id'
+                ]);
         
         if($validator->fails()){
             return response()->json([

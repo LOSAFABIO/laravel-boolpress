@@ -2072,7 +2072,7 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get("/api/posts/".concat(this.$route.params.slug)).then(function (response) {
       _this.post = response.data;
-      _this.formData.post_id = _this.post_id;
+      _this.formData.post_id = _this.post.id;
       console.log(_this.post);
     })["catch"](function (error) {
       _this.$router.push({
@@ -2084,10 +2084,11 @@ __webpack_require__.r(__webpack_exports__);
     addComment: function addComment() {
       var _this2 = this;
 
-      axios.get('api/comments/', this.formData).then(function (response) {
+      axios.post("/api/comments/", this.formData).then(function (response) {
         _this2.formData.name = "";
         _this2.formData.content = "";
-      })["catch"](function (error) {// this.formError = error.response.data.errors;
+      })["catch"](function (error) {
+        _this2.formError = error.response.data.errors;
       });
     }
   }
@@ -3642,9 +3643,9 @@ var render = function () {
                         _vm._l(_vm.formErrors.content, function (error, index) {
                           return _c("li", { key: index }, [
                             _vm._v(
-                              "\n                        " +
+                              "\n                            " +
                                 _vm._s(error) +
-                                "\n                    "
+                                "\n                        "
                             ),
                           ])
                         }),
